@@ -1,10 +1,9 @@
-function CartWidget() {
-  const cartItemCount = 3; // Temporary static value
-
+// CartWidget.jsx
+function CartWidget({ totalItems }) {
   return (
     <div style={styles.container}>
       <span role="img" aria-label="cart">🛒</span>
-      <span style={styles.badge}>{cartItemCount}</span>
+      <span style={styles.badge}>{totalItems}</span>
     </div>
   );
 }
