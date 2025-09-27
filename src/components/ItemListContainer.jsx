@@ -1,31 +1,34 @@
-// ItemListContainer.jsx
+// src/components/ItemListContainer.jsx
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import ItemList from "./ItemList"; // presentation component
-import { getProducts } from "../../data/products"; // fake API function
+import { useParams, Link } from "react-router-dom";
+import ItemList from "./ItemList";
+import { fetchAllProducts, fetchProductsByCategory } from "../firebase/config";
 
 function ItemListContainer() {
+  const { categoryId } = useParams();
   const [products, setProducts] = useState([]);
-  const { categoryId } = useParams(); // reads category from URL
-
-  // Dynamic greeting based on category
-  const greetingsMap = {
-    consoles: "Consoles",
-    handhelds: "Handhelds",
-    games: "Games",
-  };
-  const greeting = categoryId ? `Viewing ${greetingsMap[categoryId] || "Products"}` : "Welcome to RetroStore - Your home for classic gaming";
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch products asynchronously
-    getProducts(categoryId)
-      .then((res) => setProducts(res))
-      .catch((err) => console.error(err));
-  }, [categoryId]); // re-run when category changes
+    setLoading(true);
+    (async () => {
+      try {
+        const data = categoryId
+          ? await fetchProductsByCategory(categoryId)
+          : await fetchAllProducts();
+        setProducts(data);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [categoryId]);
+
+  if (loading) return <p style={{textAlign:"center"}}>Loading products...</p>;
+  if (!products || products.length === 0) return <p style={{textAlign:"center"}}>No products found.</p>;
 
   return (
     <div style={styles.container}>
-      <h1>{greeting}</h1>
+      <h1 style={{textAlign:"center"}}>{categoryId ? categoryId : "All Products"}</h1>
       <ItemList products={products} />
     </div>
   );

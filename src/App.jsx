@@ -1,9 +1,13 @@
 // App.jsx
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import NavBar from "./components/NavBar";
 import ItemListContainer from "./components/ItemListContainer";
 import ItemDetailContainer from "./components/ItemDetailContainer";
+import Cart from "./components/Cart";
+import CheckoutForm from "./components/CheckoutForm";
+<Route path="/populate" element={<populateRetro />} />
+
 
 function App() {
   const [cart, setCart] = useState([]);
@@ -22,7 +26,7 @@ function App() {
   };
 
   return (
-    <Router>
+    <>
       <NavBar cart={cart} />
       <Routes>
         <Route
@@ -39,9 +43,12 @@ function App() {
           path="/item/:id"
           element={<ItemDetailContainer addToCart={addToCart} />}
         />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<CheckoutForm />} />
         <Route path="*" element={<h2 style={{ textAlign: "center" }}>404 - Page Not Found</h2>} />
+        <Route path="/checkout" element={<CheckoutForm />} />
       </Routes>
-    </Router>
+    </>
   );
 }
 

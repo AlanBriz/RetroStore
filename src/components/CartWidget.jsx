@@ -1,28 +1,15 @@
-// CartWidget.jsx
-function CartWidget({ totalItems }) {
+// src/components/CartWidget.jsx
+function CartWidget({ totalItems = 0 }) {
   return (
-    <div style={styles.container}>
+    <div style={{ position: "relative", display: "inline-block" }}>
       <span role="img" aria-label="cart">🛒</span>
-      <span style={styles.badge}>{totalItems}</span>
+      <span style={{
+        position: "absolute", top: "-8px", right: "-8px",
+        backgroundColor: "red", color: "white", borderRadius: "50%",
+        padding: "2px 6px", fontSize: "12px"
+      }}>{totalItems}</span>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    position: "relative",
-    display: "inline-block",
-  },
-  badge: {
-    position: "absolute",
-    top: "-8px",
-    right: "-8px",
-    backgroundColor: "red",
-    color: "white",
-    borderRadius: "50%",
-    padding: "2px 6px",
-    fontSize: "12px",
-  },
-};
 
 export default CartWidget;

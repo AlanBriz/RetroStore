@@ -1,17 +1,17 @@
+// src/components/ItemDetail.jsx
 import { useState } from "react";
-import ItemCount from "./ItemCount.jsx";
+import ItemCount from "./ItemCount";
+import { useCart } from "../context/CartContext";
 
-function ItemDetail({ product, addToCart }) {
-  const [count, setCount] = useState(1);
-  const [addedMessage, setAddedMessage] = useState(false);
+function ItemDetail({ product }) {
+  const [qty, setQty] = useState(1);
+  const [added, setAdded] = useState(false);
+  const { addToCart } = useCart(); // use context directly
 
   const handleAdd = () => {
-    addToCart(product, count);
-    setAddedMessage(true);
-
-    setTimeout(() => {
-      setAddedMessage(false);
-    }, 2000);
+    addToCart(product, qty);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
   };
 
   return (
@@ -20,24 +20,24 @@ function ItemDetail({ product, addToCart }) {
       <h2>{product.name}</h2>
       <p style={styles.price}>${product.price}</p>
 
-      {/* ItemCount component */}
-      <ItemCount initial={count} onChange={setCount} />
-
-      <div style={{ marginTop: "15px" }}>
-        <button style={styles.button} onClick={handleAdd}>
-          Add to Cart
-        </button>
-      </div>
-
-      <p
-        style={{
-          ...styles.addedMessage,
-          opacity: addedMessage ? 1 : 0,
-          transition: "opacity 0.5s ease-in-out",
-        }}
-      >
-        {count} {product.name}(s) added to cart!
-      </p>
+      {!added ? (
+        <>
+          <ItemCount
+            initial={qty}
+            max={product.stock ?? 99}
+            onChange={setQty}
+          />
+          <div style={{ marginTop: 15 }}>
+            <button style={styles.button} onClick={handleAdd}>
+              Add to Cart
+            </button>
+          </div>
+        </>
+      ) : (
+        <p style={{ color: "green", fontWeight: "bold" }}>
+          {qty} items added!
+        </p>
+      )}
     </div>
   );
 }
@@ -69,11 +69,6 @@ const styles = {
     border: "none",
     borderRadius: "4px",
     cursor: "pointer",
-  },
-  addedMessage: {
-    color: "green",
-    marginTop: "10px",
-    fontWeight: "bold",
   },
 };
 
